@@ -10,10 +10,10 @@ This README provides a step-by-step guide to deploy a Go-based AWS Lambda functi
 Compile the Go Lambda function into a Linux-compatible binary:
 
 ```bash
-GOOS=linux GOARCH=amd64 go build -o main
+GOOS=linux GOARCH=arm64 go build -o bootstrap main.go 
 ```
 
-This will create an executable named `main`.
+This will create an executable named `bootstrap`.
 
 ---
 
@@ -22,7 +22,7 @@ This will create an executable named `main`.
 Create a `.zip` file containing the binary:
 
 ```bash
-zip function.zip main
+zip function.zip bootstrap
 ```
 
 ---

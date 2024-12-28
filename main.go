@@ -11,8 +11,8 @@ import (
 )
 
 type RequestPayload struct {
-	AccountID    string `json:"account_id"`
-	ConnectionID string `json:"connection_id"`
+	AccountID    int `json:"account_id"`
+	ConnectionID int `json:"connection_id"`
 }
 
 type ResponsePayload struct {
@@ -20,14 +20,14 @@ type ResponsePayload struct {
 	KeySecret string `json:"key_secret"`
 }
 
-func handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func handler(ctx context.Context, event json.RawMessage) (events.APIGatewayProxyResponse, error) {
 	var payload RequestPayload
-	if err := json.Unmarshal([]byte(req.Body), &payload); err != nil {
-		return responseWithError(errors.New("Unauthorized"), 401), nil
+	if err := json.Unmarshal(event, &payload); err != nil {
+		return responseWithError(errors.New("Unautorized"), 401), nil
 	}
 
-	if payload.AccountID == "" || payload.ConnectionID == "" {
-		return responseWithError(errors.New("Unauthorized"), 401), nil
+	if payload.AccountID <= 0 || payload.ConnectionID <= 0 {
+		return responseWithError(errors.New("Unautorized"), 401), nil
 	}
 
 	keyId := os.Getenv("KEY_ID")
