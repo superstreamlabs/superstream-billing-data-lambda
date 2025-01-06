@@ -1,5 +1,7 @@
 # AWS Lambda Deployment Guide
+
 The following Lambda function is responsible for fetching billing-related data in environments where the customer is unable to grant billing-related permissions to the IAM user or role assigned to the Superstream platform.
+
 ---
 
 ## Steps to Deploy
