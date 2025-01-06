@@ -1,7 +1,5 @@
 # AWS Lambda Deployment Guide
-
-This README provides a step-by-step guide to deploy a Go-based AWS Lambda function. The function accepts a JSON payload with two fields, `account_id` and `connection_id`. If these fields are missing, it returns an unauthorized error. Otherwise, it retrieves two environment variables (`KEY_ID` and `KEY_SECRET`) and returns them in the response.
-
+The following Lambda function is responsible for fetching billing-related data in environments where the customer is unable to grant billing-related permissions to the IAM user or role assigned to the Superstream platform.
 ---
 
 ## Steps to Deploy
@@ -29,27 +27,23 @@ zip function.zip bootstrap
 
 ### 3. Deploy the Lambda Function
 
-Deploy the function to AWS:
-
-```bash
-aws lambda create-function \
-  --function-name go-lambda-example \
-  --runtime go1.x \
-  --handler main \
-  --role arn:aws:iam::<ACCOUNT_ID>:role/LambdaExecutionRole \
-  --zip-file fileb://function.zip
-```
-
-Replace `<ACCOUNT_ID>` with your AWS account ID.
+Upload the Zip file from the AWS Lambda console
 
 ---
 
-### 5. Set Environment Variables
+### 4. Create an IAM role and attach it to the Lambda function
 
-Set the `USER` and `PASS` environment variables:
+The role should have the following permissions
 
 ```bash
-aws lambda update-function-configuration \
-  --function-name go-lambda-example \
-  --environment "Variables={KEY_ID=admin,KEY_SECRET=secret}"
+"kafka:ListTagsForResource"
+"kafka:TagResource"
+"ce:ListCostAllocationTags"
+"ce:UpdateCostAllocationTagsStatus"
+"ce:GetCostAndUsageWithResources"
+"ce:GetCostAndUsage"
+"ce:ListTagsForResource"
+"ce:GetTags"
+ +
+AWSBillingReadOnlyAccess policy
 ```
